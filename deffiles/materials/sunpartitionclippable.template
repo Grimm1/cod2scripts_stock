@@ -1,0 +1,7 @@
+#if "@blendFunc@" == "Replace" || "@polygonOffset@" != "Weapon Impact"
+	#define SUNPARTITION_CLIPPABLE 1
+#else
+	#define SUNPARTITION_CLIPPABLE 0
+#endif
+
+sunPartitionClippable( SUNPARTITION_CLIPPABLE );

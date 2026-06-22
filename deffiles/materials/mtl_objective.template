@@ -1,0 +1,16 @@
+#if "$colorMap$" != ""
+	refImage( "$colorMap$" );
+#else
+	refImage( "$white" );
+#endif
+
+#include "commonsetup.template"
+
+techniqueSet( "objective" );
+
+textureTable
+{
+	#if "$colorMap$" != ""
+		"colorMap" = map( "@tileColor@", "@filterColor@", "$colorMap$", @nopicmipColor@ ) "@formatColor@" : "colorMap";
+	#endif
+}

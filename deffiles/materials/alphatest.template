@@ -1,0 +1,21 @@
+#if "@alphaTest@" == "Always"
+
+	alphaTest( Always );
+
+#elif "@alphaTest@" == "GE128"
+
+	alphaTest( GE128 );
+
+#elif "@alphaTest@" == "GT0"
+
+	alphaTest( GT0 );
+
+#elif "@alphaTest@" == "LT128"
+
+	alphaTest( LT128 );
+
+#else
+
+	#error "unknown alphaTest \"@alphaTest@\""
+
+#endif

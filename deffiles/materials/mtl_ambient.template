@@ -1,0 +1,29 @@
+
+refImage( "$colorMap$" );
+#include "commonsetup.template"
+
+#if "@blendFunc@" == "Add"
+	#error "additive not allowed on ambient materials"
+#endif
+
+#if "@blendFunc@" == "Replace"
+	#if "@alphaTest@" == "Always"
+		techniqueSet( "ambient_replace" );
+	#else
+		techniqueSet( "ambient_alphatest" );
+	#endif
+#elif "@blendFunc@" == "Blend"
+	techniqueSet( "ambient_blend" );
+#else
+	#error "blendFunc '@blendFunc@' with alphaTest '@alphaTest@' not supported for ambient materials"
+#endif
+
+
+textureTable
+{
+	#if "$colorMap$" == ""
+		#error "colorMap may not be blank in ambient materials"
+	#endif
+	"colorMap" = map( "@tileColor@", "@filterColor@", "$colorMap$", @nopicmipColor@ ) "@formatColor@" : "colorMap";
+	"normalMap" = map( "tile both", "<auto filter>", "$identityNormalMap", true ) "<auto compression>" : "normalMap";
+}

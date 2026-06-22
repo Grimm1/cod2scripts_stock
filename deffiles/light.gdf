@@ -1,0 +1,131 @@
+#name "light"
+#dll "pc" "light"
+#dll "xenon" "light_xenon"
+#source_dir "light_assets"
+#target_dir "lights/"
+#target_dir "images/"
+#file_ext "*"
+#version 5
+
+enum
+{
+	"unshadowed point"
+} lightType
+
+string colorMap
+string attenuationMap
+
+enum { "<auto compression>*", "Uncompressed", "Alpha Only", "DXT1", "DXT3", "DXT5" } formatColor
+enum { "<auto compression>*", "Uncompressed", "Alpha Only", "DXT1", "DXT3", "DXT5" } formatAttenuation
+
+enum { "<auto filter>*", "bilinear", "trilinear", "anisotropic", "nearest", "linear" } filterColor
+enum { "<auto filter>*", "nearest", "linear" } filterAttenuation
+
+int 1 0 1 nopicmipColor
+int 1 0 1 nopicmipAttenuation
+
+
+vcontainer
+{
+	scrollbox( lightType )
+	[
+		exec
+		{
+			width( 250 )
+			labelwidth( 100 )
+		}
+	]
+
+	vcontainer
+	{
+		fileedit( attenuationMap )
+		[
+			exec
+			{
+				width( 450 )
+				labelwidth( 0 )
+			}
+		]
+		hcontainer
+		{
+			scrollbox( filterAttenuation )
+			[
+				exec
+				{
+					width( 110 )
+					labelwidth( 0 )
+				}
+			]
+			scrollbox( formatAttenuation )
+			[
+				exec
+				{
+					width( 165 )
+					labelwidth( 0 )
+				}
+			]
+			checkbox( nopicmipAttenuation )
+			[
+				exec
+				{
+					righttext()
+					labelwidth( 65 )
+					label( "nopicmip" )
+				}
+			]
+		}
+	}
+	[
+		exec
+		{
+			groupBox( "Attenuation map" )
+		}
+	]
+
+	vcontainer
+	{
+		fileedit( colorMap )
+		[
+			exec
+			{
+				width( 450 )
+				labelwidth( 0 )
+			}
+		]
+		hcontainer
+		{
+			scrollbox( filterColor )
+			[
+				exec
+				{
+					width( 110 )
+					labelwidth( 0 )
+				}
+			]
+			scrollbox( formatColor )
+			[
+				exec
+				{
+					width( 165 )
+					labelwidth( 0 )
+				}
+			]
+			checkbox( nopicmipColor )
+			[
+				exec
+				{
+					righttext()
+					labelwidth( 65 )
+					label( "nopicmip" )
+				}
+			]
+		}
+	}
+	[
+		exec
+		{
+			groupBox( "Color map" )
+			visible( lightType != "unshadowed point" ) 
+		}
+	]
+}

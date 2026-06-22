@@ -1,0 +1,14 @@
+#include "refblend.template"
+#include "sort.template"
+#include "clamp.template"
+#if "@materialType@" == "world phong" || "@materialType@" == "model phong" || "@materialType@" == "water" || "@materialType@" == "custom"
+	#include "sunpartitionclippable.template"
+#else
+	sunPartitionClippable( false );
+#endif
+tessSize( @tessSize@ );
+#include "textureAtlas.template"
+
+allocLightmap( "@materialType@" == "world phong" || "@materialType@" == "model phong" );
+
+#include "statebits.template"

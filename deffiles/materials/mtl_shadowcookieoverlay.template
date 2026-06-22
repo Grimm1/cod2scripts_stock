@@ -1,0 +1,5 @@
+refImage( "$white" );
+#include "commonsetup.template"
+
+
+techniqueSet( "shadowcookieoverlay" );

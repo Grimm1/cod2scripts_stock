@@ -1,0 +1,26 @@
+refImage( "$colorMap$" );
+
+#include "refblend.template"
+#include "sort.template"
+#include "clamp.template"
+
+sunPartitionClippable( false );
+textureAtlas( 1, 1 );
+tessSize( 0 );
+
+allocLightmap( false );
+#include "statebits.template"
+
+#if @outdoorOnly@
+	techniqueSet( "particle_cloud_outdoor" );
+#else
+	techniqueSet( "particle_cloud" );
+#endif
+
+textureTable
+{
+	#if "$colorMap$" == ""
+		#error "colorMap may not be blank in particle cloud materials"
+	#endif
+	"colorMap" = map( "@tileColor@", "@filterColor@", "$colorMap$", @nopicmipColor@ ) "@formatColor@" : "colorMap";
+}

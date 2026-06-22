@@ -1,0 +1,24 @@
+refCubeImage( "$cubicEnvMap$" );
+#include "commonsetup.template"
+
+
+techniqueSet( "water" );
+
+
+textureTable
+{
+	"colorMap" = map( "tile both", "<auto filter>", "texture_assets\case\case64blue.tga", 0 ) "@formatColor@" : "colorMap";
+
+	#if "$cubicEnvMap$" == ""
+		#error "cubicEnvMap may not be blank in water materials"
+	#endif
+	"cubicEnvMap" = cubemap( "no tile", "@filterCubicEnv@", "$cubicEnvMap$", @nopicmipCubicEnv@ ) "@formatCubicEnv@" : "colorMap";
+
+	"normalMap" = watermap( @waterMapTextureWidth@, @waterMapHorizontalWorldLength@, @waterMapVerticalWorldLength@, @waterMapAmplitude@, @waterMapWindSpeed@,  @waterMapWindDirectionX@,  @waterMapWindDirectionY@ ) "Uncompressed" : "waterMap";
+}
+
+
+constantTable
+{
+	"waterColor" = float4( @waterColorR@, @waterColorG@, @waterColorB@, 1 );
+}

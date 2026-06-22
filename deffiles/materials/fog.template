@@ -1,0 +1,5 @@
+#if @noFog@
+	fog( Disable );
+#else
+	fog( Enable );
+#endif

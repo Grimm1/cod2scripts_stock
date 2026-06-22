@@ -1,0 +1,20 @@
+refImage( "$colorMap$" );
+#include "commonsetup.template"
+
+
+techniqueSet( "distortion" );
+
+
+textureTable
+{
+	#if "$colorMap$" == ""
+		#error "colorMap may not be blank in distortion effect materials"
+	#endif
+	"colorMap" = map( "@tileColor@", "@filterColor@", "$colorMap$", @nopicmipColor@ ) "@formatColor@" : "colorMap";
+}
+
+
+constantTable
+{
+	"distortionScale" = float4( @distortionScaleX@, @distortionScaleY@, 0, 0 );
+}

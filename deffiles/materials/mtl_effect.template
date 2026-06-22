@@ -1,0 +1,74 @@
+refImage( "$colorMap$" );
+#include "commonsetup.template"
+
+
+#if @zFeather@
+	#if "@blendFunc@" == "Multiply"
+		#error "zFeather does not support multiply."
+	#elif "@blendFunc@" == "Add"
+		#if @noFog@
+			#if @outdoorOnly@
+				techniqueSet( "effect_zfeather_outdoor_add_nofog" );
+			#else
+				techniqueSet( "effect_zfeather_add_nofog" );
+			#endif
+		#else
+			#if @outdoorOnly@
+				techniqueSet( "effect_zfeather_outdoor_add" );
+			#else
+				techniqueSet( "effect_zfeather_add" );
+			#endif
+		#endif
+	#else
+		#if @noFog@
+			#if @outdoorOnly@
+				techniqueSet( "effect_zfeather_outdoor_nofog" );
+			#else 
+				techniqueSet( "effect_zfeather_nofog" );
+			#endif
+		#else // #if @noFog@
+			#if @outdoorOnly@
+				techniqueSet( "effect_zfeather_outdoor" );
+			#else 
+				techniqueSet( "effect_zfeather" );
+			#endif
+		#endif
+	#endif
+#else // #if @zFeather@
+	#if "@blendFunc@" == "Multiply"
+		#if @noFog@
+			techniqueSet( "effect_multiply_nofog" );
+		#else
+			techniqueSet( "effect_multiply" );
+		#endif
+	#elif "@blendFunc@" == "Add"
+		#if @noFog@
+			techniqueSet( "effect_add_nofog" );
+		#else
+			techniqueSet( "effect_add" );
+		#endif
+	#else
+		#if @noFog@
+			techniqueSet( "effect_nofog" );
+		#else
+			techniqueSet( "effect" );
+		#endif
+	#endif
+#endif // #else // #if @zFeather@
+
+
+textureTable
+{
+	#if "$colorMap$" == ""
+		#error "colorMap may not be blank in effect materials"
+	#endif
+	"colorMap" = map( "@tileColor@", "@filterColor@", "$colorMap$", @nopicmipColor@ ) "@formatColor@" : "colorMap";
+}
+
+
+constantTable
+{
+#if @zFeather@
+	"featherParms" = float4( 1.0 / @zFeatherDepth@, @zFeatherDepth@, 0, 0 );
+#endif // #if @zFeather@
+}

@@ -1,0 +1,83 @@
+#if "@sort@" == "" || "@sort@" == "<default>"
+	#if "@materialType@" == "distortion"
+		#define SORTKEY "distortion"
+	#elif "@polygonOffset@" == "Static Decal"
+		#define SORTKEY "decal - static decal"
+	#elif "@polygonOffset@" == "Weapon Impact"
+		#define SORTKEY "decal - weapon impact"
+	#elif "@blendFunc@" == "Blend" || "@blendFunc@" == "Add"
+		#define SORTKEY "blend / additive"
+	#elif "@blendFunc@" == "Multiply"
+		#define SORTKEY "multiplicative"
+	#elif "@materialType@" == "sky"
+		#define SORTKEY "sky"
+	#else
+		#define SORTKEY "opaque"
+	#endif
+#else
+	#define SORTKEY "@sort@"
+#endif
+
+#if SORTKEY == "distortion"
+	sort( 0 );
+#elif SORTKEY == "opaque water"
+	sort( 1 );
+#elif SORTKEY == "boat hull"
+	sort( 2 );
+#elif SORTKEY == "opaque"
+	sort( 3 );
+#elif SORTKEY == "sky"
+	sort( 4 );
+#elif SORTKEY == "skybox - sun / moon"
+	sort( 5 );
+#elif SORTKEY == "skybox - clouds"
+	sort( 6 );
+#elif SORTKEY == "skybox - horizon"
+	sort( 7 );
+#elif SORTKEY == "decal - bottom 1"
+	sort( 8 );
+#elif SORTKEY == "decal - bottom 2"
+	sort( 9 );
+#elif SORTKEY == "decal - bottom 3"
+	sort( 10 );
+#elif SORTKEY == "decal - static decal"
+	sort( 11 );
+#elif SORTKEY == "decal - middle 1"
+	sort( 12 );
+#elif SORTKEY == "decal - middle 2"
+	sort( 13 );
+#elif SORTKEY == "decal - middle 3"
+	sort( 14 );
+#elif SORTKEY == "decal - weapon impact"
+	sort( 15 );
+#elif SORTKEY == "decal - top 1"
+	sort( 16 );
+#elif SORTKEY == "decal - top 2"
+	sort( 17 );
+#elif SORTKEY == "decal - top 3"
+	sort( 18 );
+#elif SORTKEY == "multiplicative"
+	sort( 19 );
+#elif SORTKEY == "banner / curtain"
+	sort( 20 );
+#elif SORTKEY == "hair"
+	sort( 21 );
+#elif SORTKEY == "underwater"
+	sort( 22 );
+#elif SORTKEY == "transparent water"
+	sort( 23 );
+#elif SORTKEY == "corona"
+	sort( 24 );
+#elif SORTKEY == "window inside"
+	sort( 25 );
+#elif SORTKEY == "window outside"
+	sort( 26 );
+#elif SORTKEY == "blend / additive"
+	sort( 27 );
+#elif SORTKEY == "viewmodel effect"
+	sort( 28 );
+#else
+	#error "Unknown sort '@sort@'"
+#endif
+
+#undef SORTKEY

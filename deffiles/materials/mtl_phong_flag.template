@@ -1,0 +1,112 @@
+#if TARGET_PLATFORM == "xenon"
+	#define NORMAL_MAP_FORMAT	"DXN"
+#else
+	#define NORMAL_MAP_FORMAT	"<auto compression>"
+#endif
+
+//
+// default images
+//
+#if "$normalMap$" != ""
+	#error "flag materials do not currently support normal maps"
+#else
+	#if "$specColorMap$" != ""
+		#define SPEC_COLOR_IMAGE	"$specColorMap$"
+	#else
+		#define SPEC_COLOR_IMAGE	"$white"
+	#endif
+	#if "$cosinePowerMap$" != ""
+		#define COSINE_POWER_IMAGE	"$cosinePowerMap$"
+	#else
+		#define COSINE_POWER_IMAGE	"$white"
+	#endif
+
+	#if "@formatSpecular@" == "<auto compression>"
+		#define SPECULAR_FORMAT		"DXT5"
+	#else
+		#define SPECULAR_FORMAT		"@formatSpecular@"
+	#endif
+
+	#if SPEC_COLOR_IMAGE != "$white"
+		#define COSINE_POWER_SCALE	((@cosinePowerStrength@ * 0.01) * 30.5 / 32.0)
+	#else
+		#define COSINE_POWER_SCALE	(@cosinePowerStrength@ * 0.01)
+ 	#endif
+#endif
+#define NORMAL_MAP_IMAGE "$identityNormalMap"
+#define USE_SPECULAR		1
+
+#define	USE_DETAIL_MAP	("$detailMap$" != "")
+#if USE_DETAIL_MAP
+	#error "flag materials do not currently support detail maps"
+#endif
+
+
+refImage( "$colorMap$" );
+#include "commonsetup.template"
+
+
+#if @texScroll@
+	#error "flag materials do not support texture scrolling"
+#endif
+
+#if "@blendFunc@" == "Replace"
+	#if "@alphaTest@" == "GE128"
+		techniqueSet( "phong_flag_alphatest_spec" );
+	#else
+		#error "flag materials only support alphaTest GE128"
+	#endif
+#elif "@blendFunc@" == "Blend"
+	#error "flag materials only support blendFunc Replace"
+#endif
+
+
+textureTable
+{
+	#if "$colorMap$" == ""
+		#error "colorMap may not be blank in phong materials"
+	#endif
+	"colorMap" = map( "@tileColor@", "@filterColor@", "$colorMap$", @nopicmipColor@ ) "@formatColor@" : "colorMap";
+
+	#if USE_DETAIL_MAP
+		"detailMap" = map( "tile both", "@filterDetail@", "$detailMap$", @nopicmipDetail@ ) "@formatDetail@" : "colorMap";
+	#endif
+
+	#if NORMAL_MAP_IMAGE == "$identityNormalMap"
+		"normalMap" = map( "tile both", "<auto filter>", "$identityNormalMap", true ) "<auto compression>" : "normalMap";
+	#elif NORMAL_MAP_FORMAT == "DXN"
+		"normalMap" = composite
+		(
+			map( NORMAL_MAP_TILE, NORMAL_MAP_FILTER, NORMAL_MAP_IMAGE, NORMAL_MAP_NOPICMIP ).r,
+			map( NORMAL_MAP_TILE, NORMAL_MAP_FILTER, NORMAL_MAP_IMAGE, NORMAL_MAP_NOPICMIP ).g,
+			map( NORMAL_MAP_TILE, NORMAL_MAP_FILTER, NORMAL_MAP_IMAGE, NORMAL_MAP_NOPICMIP ).b,
+			map( NORMAL_MAP_TILE, NORMAL_MAP_FILTER, NORMAL_MAP_IMAGE, NORMAL_MAP_NOPICMIP ).g
+		) NORMAL_MAP_FORMAT : "normalMap";
+	#else
+		"normalMap" = composite
+		(
+			map( NORMAL_MAP_TILE, NORMAL_MAP_FILTER, NORMAL_MAP_IMAGE, NORMAL_MAP_NOPICMIP ).g,
+			map( NORMAL_MAP_TILE, NORMAL_MAP_FILTER, NORMAL_MAP_IMAGE, NORMAL_MAP_NOPICMIP ).g,
+			map( NORMAL_MAP_TILE, NORMAL_MAP_FILTER, NORMAL_MAP_IMAGE, NORMAL_MAP_NOPICMIP ).g,
+			map( NORMAL_MAP_TILE, NORMAL_MAP_FILTER, NORMAL_MAP_IMAGE, NORMAL_MAP_NOPICMIP ).r
+		) NORMAL_MAP_FORMAT : "normalMap";
+	#endif
+
+	#if USE_SPECULAR
+		"specularMap" = composite
+		(
+			map( "@tileSpecular@", "@filterSpecular@", SPEC_COLOR_IMAGE, @nopicmipSpecular@ ).r * (@specColorStrength@ * 0.01),
+			map( "@tileSpecular@", "@filterSpecular@", SPEC_COLOR_IMAGE, @nopicmipSpecular@ ).g * (@specColorStrength@ * 0.01),
+			map( "@tileSpecular@", "@filterSpecular@", SPEC_COLOR_IMAGE, @nopicmipSpecular@ ).b * (@specColorStrength@ * 0.01),
+			map( "@tileSpecular@", "@filterSpecular@", COSINE_POWER_IMAGE, @nopicmipSpecular@ ) * COSINE_POWER_SCALE
+		) SPECULAR_FORMAT : "specularMap";
+	#endif
+}
+
+
+constantTable
+{
+	#if USE_DETAIL_MAP
+		"detailScale" = float4( @detailScaleX@, @detailScaleY@, 0, 0 );
+	#endif
+}
